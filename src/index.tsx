@@ -83,10 +83,17 @@ export default function App() {
       <div className="flex items-center mb-10 border-b pb-3 justify-between">
         <div>
           <h1 className="text-2xl ">Excel Renderer</h1>
-          <p>
-            Simple utilty to render excel data on a table with the ability to
-            add more columns.
-          </p>
+          <div>
+            <p>
+              Simple utilty to render excel data on a table with the ability to
+              add more columns, kindly upload a csv or XLSX file for the table
+              to render.
+            </p>
+            <span className="text-blue-500 italic">
+              Click on each column header to change the cell display type to a
+              select input.
+            </span>
+          </div>
         </div>
         <div className="flex max-w-4xl w-full gap-10">
           {isAddColumnData && (
@@ -260,6 +267,7 @@ function dynamicColumn({
                 </div>
               ) : (
                 <input
+                  accept=".csv,.xlsx"
                   className="w-full px-2"
                   value={value as string}
                   onChange={(e) => [setValue(e.target.value)]}
@@ -269,6 +277,7 @@ function dynamicColumn({
             ) : (
               <input
                 className="w-full px-2"
+                accept=".csv,.xlsx"
                 value={value as string}
                 onChange={(e) => [setValue(e.target.value)]}
                 onBlur={() => onBlur()}

@@ -33,6 +33,7 @@ function useSkipper() {
 interface ITableProps {
   dynamicColumn: ({ data, editable }: any) => any;
   selectedColumn: string;
+  dataSelect: any;
   StateData: any;
   handleSelectColumn: (value: any) => void;
   makeSelectedColumnCellsADropDown: {
@@ -45,6 +46,7 @@ export default function MyTable({
   dynamicColumn,
   StateData,
   handleSelectColumn,
+  dataSelect,
   selectedColumn,
   makeSelectedColumnCellsADropDown,
 }: ITableProps) {
@@ -58,6 +60,7 @@ export default function MyTable({
       data: StateData,
       selectedColumn: selectedColumn,
       makeSelectedColumnCellsADropDown,
+      dataSelect: dataSelect,
     }),
     getCoreRowModel: getCoreRowModel(),
     // getFilteredRowModel: getFilteredRowModel(),

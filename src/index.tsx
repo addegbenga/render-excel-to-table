@@ -6,9 +6,15 @@ import Table from "./components/Table/main";
 type IAddColumnsProps = {
   columnName: string;
 };
+const defaultdataSelect = ["category", "hiking"];
 export default function App() {
   const [addColumnValue, setAddColumnValue] = useState("");
   const [selectedColumn, setSelectedColumn] = useState<string>("");
+  const [columnData, setColumnData] = useState<string>("");
+  const columnDataTOArray = columnData.split(",");
+
+  console.log(columnDataTOArray, "as");
+  const [isAddColumnData, setIsAddColumnData] = useState<boolean>(false);
   const rerender = React.useReducer(() => ({}), {})[1];
   const [sheetData, setSheetData] = useState<any>([]);
   const selectedColumnLength = selectedColumn.length > 0 ? true : false;
@@ -82,24 +88,52 @@ export default function App() {
             add more columns.
           </p>
         </div>
-        <div className="max-w-sm w-full flex-col  gap-2 flex">
-          <label className="text-gray-400">Add more columns:</label>
-          <div className="flex h-14 border">
-            <input
-              onChange={(e) => setAddColumnValue(e.target.value)}
-              className=" p-2 px-4 focus:outline-none w-full placeholder:font-thin"
-              placeholder="Add text here"
-              value={addColumnValue}
-            />
-            <button
-              onClick={() => [
-                handleAddMoreColumns({ columnName: addColumnValue }),
-                rerender(),
-              ]}
-              className="bg-gray-100 outline-none h-full text-black text-lg -ml-13  w-fit   px-5 rounded"
-            >
-              +
-            </button>
+        <div className="flex max-w-4xl w-full gap-10">
+          {isAddColumnData && (
+            <div className="w-full ">
+              <div className=" w-full flex-col  gap-2 flex">
+                <label className="text-gray-400">
+                  Add column select dropdown:
+                </label>
+                <div className="flex h-14 border">
+                  <input
+                    onChange={(e) => setColumnData(e.target.value)}
+                    className=" p-2 px-4 w-full focus:outline-none  placeholder:font-thin"
+                    placeholder="Text should be separated with commas"
+                    value={columnData}
+                  />
+                  {/* <button
+                    onClick={() => [
+                      // handleAddMoreColumns({ columnName: addColumnValue }),
+                      rerender(),
+                    ]}
+                    className="bg-gray-100 outline-none h-full text-black text-lg -ml-13  w-fit   px-5 rounded"
+                  >
+                    +
+                  </button> */}
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="flex-col   w-full  gap-2 flex">
+            <label className="text-gray-400">Add more columns:</label>
+            <div className="flex h-14 border">
+              <input
+                onChange={(e) => setAddColumnValue(e.target.value)}
+                className=" p-2 px-4 focus:outline-none w-full placeholder:font-thin"
+                placeholder="Add text here"
+                value={addColumnValue}
+              />
+              <button
+                onClick={() => [
+                  handleAddMoreColumns({ columnName: addColumnValue }),
+                  rerender(),
+                ]}
+                className="bg-gray-100 outline-none h-full text-black text-lg -ml-13  w-fit   px-5 rounded"
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -111,9 +145,34 @@ export default function App() {
           placeholder="excel"
         />
       </div>
+      {selectedColumnLength && (
+        <div className="bg-gray-100 border relative mt-2 items-center flex  justify-between p-3 rounded">
+          <p>
+            You just selected{" "}
+            <span className="font-semibold italic">
+              {selectedColumn} Column
+            </span>{" "}
+            click on the button to add your own drop down data for the selected
+            column.
+          </p>
+          <button
+            onClick={() => setIsAddColumnData(true)}
+            className="bg-slate-500 text-white rounded px-10 py-2"
+          >
+            Add data
+          </button>
+          <button
+            onClick={() => setSelectedColumn("")}
+            className="absolute  -top-5 bg-black  text-white h-6 w-6 flex items-center justify-center rounded-full -right-1"
+          >
+            <span className="text-sm">X</span>
+          </button>
+        </div>
+      )}
       <div>
         {sheetData.length > 0 && (
           <Table
+            dataSelect={columnDataTOArray || defaultdataSelect}
             selectedColumn={selectedColumn}
             handleSelectColumn={handleSelectColumn}
             makeSelectedColumnCellsADropDown={{ istrue: true, key: "" }}
@@ -137,6 +196,7 @@ export type Person = {
 
 interface IdynamicColumnProps {
   data: any;
+  dataSelect: any;
   selectedColumn: string;
   makeSelectedColumnCellsADropDown: {
     istrue: boolean;
@@ -144,37 +204,11 @@ interface IdynamicColumnProps {
   };
 }
 
-const dataSelect = [
-  {
-    name: "Food",
-    id: 1,
-  },
-  {
-    name: "Drinks",
-    id: 1,
-  },
-  {
-    name: "Beverages",
-    id: 1,
-  },
-  {
-    name: "Gums",
-    id: 1,
-  },
-  {
-    name: "Seafoods",
-    id: 1,
-  },
-  {
-    name: "Crunches",
-    id: 1,
-  },
-];
-
 function dynamicColumn({
   data,
   selectedColumn,
   makeSelectedColumnCellsADropDown,
+  dataSelect,
 }: IdynamicColumnProps) {
   const columnHelper = createColumnHelper<Person>();
   const column = Object.keys(data[0]).map((item, idx) => {
@@ -215,11 +249,13 @@ function dynamicColumn({
                     value={value as string}
                     onBlur={() => onBlur()}
                   >
-                    {dataSelect.map((item, idx) => (
-                      <option value={item.name} key={idx}>
-                        {item.name}
-                      </option>
-                    ))}
+                    {dataSelect.map(
+                      (item: any, idx: React.Key | null | undefined) => (
+                        <option value={item} key={idx}>
+                          {item}
+                        </option>
+                      )
+                    )}
                   </select>
                 </div>
               ) : (

@@ -90,8 +90,8 @@ export default function App() {
               to render.
             </p>
             <span className="text-blue-500 italic">
-              Click on each column header to change the cell display type to a
-              select input.
+              Click on any of the column header to change the cell display type
+              to a select input.
             </span>
           </div>
         </div>

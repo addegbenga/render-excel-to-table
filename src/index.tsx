@@ -178,14 +178,16 @@ export default function App() {
       )}
       <div>
         {sheetData.length > 0 && (
-          <Table
-            dataSelect={columnDataTOArray || defaultdataSelect}
-            selectedColumn={selectedColumn}
-            handleSelectColumn={handleSelectColumn}
-            makeSelectedColumnCellsADropDown={{ istrue: true, key: "" }}
-            StateData={sheetData}
-            dynamicColumn={dynamicColumn}
-          />
+          <div className="overflow-x-auto">
+            <Table
+              dataSelect={columnDataTOArray || defaultdataSelect}
+              selectedColumn={selectedColumn}
+              handleSelectColumn={handleSelectColumn}
+              makeSelectedColumnCellsADropDown={{ istrue: true, key: "" }}
+              StateData={sheetData}
+              dynamicColumn={dynamicColumn}
+            />
+          </div>
         )}
       </div>
     </div>
@@ -222,7 +224,7 @@ function dynamicColumn({
     return columnHelper.accessor((row: any) => row[item], {
       id: item,
       header: () => (
-        <div className="font-medium flex justify-between p-3 truncate  w-full   text-[#0A172A] text-opacity-40">
+        <div className="font-medium w-[25rem] flex justify-between p-3 truncate    text-[#0A172A] text-opacity-40">
           {item}
           <button>X</button>
         </div>

@@ -13,6 +13,7 @@ export default function App() {
   const [sheetData, setSheetData] = useState<any>([]);
   const selectedColumnLength = selectedColumn.length > 0 ? true : false;
   function handleDrop(e: any) {
+    console.log(e);
     e.stopPropagation();
     e.preventDefault();
     var f = e.dataTransfer.files[0];
@@ -30,6 +31,26 @@ export default function App() {
       setSheetData(jsa);
     };
     reader.readAsArrayBuffer(f);
+  }
+  function handleExcelFileChange(event: any) {
+    const file = event.target.files[0];
+
+    // Use FileReader to read the file
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
+
+    // When FileReader finishes reading the file, parse the Excel data
+    fileReader.onload = () => {
+      const arrayBuffer: any = fileReader.result;
+      const data = new Uint8Array(arrayBuffer);
+
+      /* DO SOMETHING WITH workbook HERE */
+      const workbook = XLSX.read(data);
+      const workSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsa = XLSX.utils.sheet_to_json(workSheet);
+      console.log(jsa);
+      setSheetData(jsa);
+    };
   }
 
   const handleAddMoreColumns = ({ columnName }: IAddColumnsProps) => {
@@ -52,9 +73,15 @@ export default function App() {
   };
 
   return (
-    <div className="  pt-10 px-3 mx-auto">
+    <div className="  pt-5 px-3 mx-auto">
       <div className="flex items-center mb-10 border-b pb-3 justify-between">
-        <h1 className="text-2xl ">Excel Renderer</h1>
+        <div>
+          <h1 className="text-2xl ">Excel Renderer</h1>
+          <p>
+            Simple utilty to render excel data on a table with the ability to
+            add more columns.
+          </p>
+        </div>
         <div className="max-w-sm w-full flex-col  gap-2 flex">
           <label className="text-gray-400">Add more columns:</label>
           <div className="flex h-14 border">
@@ -78,7 +105,7 @@ export default function App() {
       </div>
       <div>
         <input
-          onChange={(e: any) => handleDrop(e)}
+          onChange={(e: any) => handleExcelFileChange(e)}
           onDrop={(e) => handleDrop(e)}
           type="file"
           placeholder="excel"

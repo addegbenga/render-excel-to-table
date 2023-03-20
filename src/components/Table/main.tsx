@@ -91,12 +91,12 @@ export default function MyTable({
   return (
     <div className="p-2">
       <div className="h-2" />
-      <table className="w-full bg-white  ">
+      <table className=" w-full  bg-white  ">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
               onClick={(e) => console.log(e)}
-              className="text-left truncate text-ellipsis overflow-x-auto"
+              className="text-left w-full "
               key={headerGroup.id}
             >
               {headerGroup.headers.map((header) => {

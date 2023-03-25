@@ -6,20 +6,20 @@ import Table from "./components/Table/main";
 type IAddColumnsProps = {
   columnName: string;
 };
-const defaultdataSelect = ["category", "hiking"];
+
 export default function App() {
   const [addColumnValue, setAddColumnValue] = useState("");
+  const [multipleSheet, setMultipleSheet] = useState<any>({});
   const [selectedColumn, setSelectedColumn] = useState<string>("");
   const [columnData, setColumnData] = useState<string>("");
   const columnDataTOArray = columnData.split(",");
+  const [excelFile, setFile] = useState<any>();
 
-  console.log(columnDataTOArray, "as");
   const [isAddColumnData, setIsAddColumnData] = useState<boolean>(false);
   const rerender = React.useReducer(() => ({}), {})[1];
   const [sheetData, setSheetData] = useState<any>([]);
   const selectedColumnLength = selectedColumn.length > 0 ? true : false;
   function handleDrop(e: any) {
-    console.log(e);
     e.stopPropagation();
     e.preventDefault();
     var f = e.dataTransfer.files[0];
@@ -40,7 +40,7 @@ export default function App() {
   }
   function handleExcelFileChange(event: any) {
     const file = event.target.files[0];
-
+    setFile(file);
     // Use FileReader to read the file
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(file);
@@ -52,12 +52,34 @@ export default function App() {
 
       /* DO SOMETHING WITH workbook HERE */
       const workbook = XLSX.read(data);
-      const workSheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsa = XLSX.utils.sheet_to_json(workSheet);
-      console.log(jsa);
-      setSheetData(jsa);
+      const length = Object.keys(workbook.Sheets).length;
+      if (length > 1) {
+        return setMultipleSheet(workbook.Sheets);
+      } else {
+        const workSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsa = XLSX.utils.sheet_to_json(workSheet);
+        setSheetData(jsa);
+        console.log(jsa);
+      }
     };
   }
+
+  const handleRenderExcel = (selectedSheetIdx: number) => {
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(excelFile);
+
+    // When FileReader finishes reading the file, parse the Excel data
+    fileReader.onload = () => {
+      const arrayBuffer: any = fileReader.result;
+      const data = new Uint8Array(arrayBuffer);
+      /* DO SOMETHING WITH workbook HERE */
+      const workbook = XLSX.read(data);
+      console.log(selectedSheetIdx);
+      const workSheet = workbook.Sheets[workbook.SheetNames[selectedSheetIdx]];
+      const jsa = XLSX.utils.sheet_to_json(workSheet);
+      setSheetData(jsa);
+    };
+  };
 
   const handleAddMoreColumns = ({ columnName }: IAddColumnsProps) => {
     if (addColumnValue === "") {
@@ -70,7 +92,6 @@ export default function App() {
     });
     return setSheetData(dummy);
   };
-  const handleDeleteColumn = () => {};
 
   const handleSelectColumn = (value: any) => {
     !selectedColumnLength
@@ -95,6 +116,7 @@ export default function App() {
             </span>
           </div>
         </div>
+
         <div className="flex max-w-4xl w-full gap-10">
           {isAddColumnData && (
             <div className="w-full ">
@@ -176,11 +198,27 @@ export default function App() {
           </button>
         </div>
       )}
+      {Object.keys(multipleSheet).length > 1 && (
+        <div className="my-5">
+          <h1 className="text-xl">
+            This File contains multiple Sheets select a sheet to render
+          </h1>
+          <div>
+            {Object.keys(multipleSheet).map((item, idx) => {
+              return (
+                <ul key={idx} className="list-disc cursor-pointer ml-4">
+                  <li onClick={() => handleRenderExcel(idx)}>{item}</li>
+                </ul>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div>
         {sheetData.length > 0 && (
           <div className="overflow-x-auto ">
             <Table
-              dataSelect={columnDataTOArray || defaultdataSelect}
+              dataSelect={columnDataTOArray}
               selectedColumn={selectedColumn}
               handleSelectColumn={handleSelectColumn}
               makeSelectedColumnCellsADropDown={{ istrue: true, key: "" }}

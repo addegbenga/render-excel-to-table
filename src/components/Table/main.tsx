@@ -6,7 +6,6 @@ import {
   flexRender,
   RowData,
 } from "@tanstack/react-table";
-import { Person } from "./makeData";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {

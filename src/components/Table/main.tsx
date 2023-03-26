@@ -51,6 +51,7 @@ export default function MyTable({
 }: ITableProps) {
   const [data, setData] = React.useState(() => StateData);
 
+  console.log(data, "ddd");
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 
   const table = useReactTable({
@@ -63,7 +64,7 @@ export default function MyTable({
     }),
     getCoreRowModel: getCoreRowModel(),
     // getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {
@@ -88,25 +89,25 @@ export default function MyTable({
   });
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
-      <table className=" w-full  bg-white  ">
-        <thead>
+    <div className=" w-full  rounded-xl">
+      <table className=" w-full table-fixed  ">
+        <thead className="sticky   self-start top-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr
               onClick={(e) => console.log(e)}
-              className="text-left w-full "
+              className="text-left w-full   "
               key={headerGroup.id}
             >
               {headerGroup.headers.map((header) => {
                 return (
                   <th
+                    className="border border-l-0 border-t-0"
                     onClick={(e) => handleSelectColumn(header)}
                     key={header.id}
                     colSpan={header.colSpan}
                   >
                     {header.isPlaceholder ? null : (
-                      <div>
+                      <div className="">
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()

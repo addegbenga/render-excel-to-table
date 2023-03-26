@@ -5,6 +5,7 @@ import { IAddColumnsProps } from "./components/Table/types";
 import { stepType } from "./components/Steps/types";
 import StepTwo from "./components/Steps/StepTwo";
 import StepLayout from "./components/Steps/StepLayout";
+import StepThree from "./components/Steps/StepThree";
 
 export function IndexView() {
   const [sharedState, setSharedState] = useState({
@@ -50,31 +51,6 @@ export function IndexView() {
       setSheetData(jsa);
     };
     reader.readAsArrayBuffer(f);
-  }
-  function handleExcelFileChange(event: any) {
-    const file = event.target.files[0];
-    setFile(file);
-    // Use FileReader to read the file
-    const fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(file);
-
-    // When FileReader finishes reading the file, parse the Excel data
-    fileReader.onload = () => {
-      const arrayBuffer: any = fileReader.result;
-      const data = new Uint8Array(arrayBuffer);
-
-      /* DO SOMETHING WITH workbook HERE */
-      const workbook = XLSX.read(data);
-      const length = Object.keys(workbook.Sheets).length;
-      if (length > 1) {
-        return setMultipleSheet(workbook.Sheets);
-      } else {
-        const workSheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsa = XLSX.utils.sheet_to_json(workSheet);
-        setSheetData(jsa);
-        console.log(jsa);
-      }
-    };
   }
 
   const handleAddMoreColumns = ({ columnName }: IAddColumnsProps) => {
@@ -216,15 +192,20 @@ export function IndexView() {
     //     )}
     //   </div>
     // </div>
-    <StepLayout setSharedState={setSharedState} props={sharedState}>
-      <section className="">
-        {sharedState.step === stepType.stepOne && (
-          <StepOneView setSharedState={setSharedState} props={sharedState} />
-        )}
-        {sharedState.step === stepType.stepTwo && (
-          <StepTwo setSharedState={setSharedState} props={sharedState} />
-        )}
-      </section>
-    </StepLayout>
+    <div className="overflow-y-hidden">
+      <StepLayout setSharedState={setSharedState} props={sharedState}>
+        <section className="">
+          {sharedState.step === stepType.stepOne && (
+            <StepOneView setSharedState={setSharedState} props={sharedState} />
+          )}
+          {sharedState.step === stepType.stepTwo && (
+            <StepTwo setSharedState={setSharedState} props={sharedState} />
+          )}
+          {sharedState.step === stepType.stepThree && (
+            <StepThree setSharedState={setSharedState} props={sharedState} />
+          )}
+        </section>
+      </StepLayout>
+    </div>
   );
 }

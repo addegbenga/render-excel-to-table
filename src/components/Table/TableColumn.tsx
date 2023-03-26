@@ -23,9 +23,8 @@ export function dynamicColumn({
     return columnHelper.accessor((row: any) => row[item], {
       id: item,
       header: () => (
-        <div className="font-medium w-[29rem] cursor-pointer flex justify-between p-3 truncate    text-[#0A172A] text-opacity-40">
+        <div className="font-medium  bg-white z-20 p-4 sticky top-0 self-start  cursor-pointer flex justify-between  truncate    text-[#0A172A] text-opacity-40">
           {item}
-          <button className="">X</button>
         </div>
       ),
       footer: (info) => info.column.id,

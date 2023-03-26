@@ -35,6 +35,7 @@ export default function StepOne<T>({ props, setSharedState }: IStepProps<T>) {
         const jsa = XLSX.utils.sheet_to_json(workSheet);
         setSharedState({ ...props, sheetData: jsa, filedata: file });
         // setSheetData(jsa);
+        console.log(jsa);
       }
     };
   }
@@ -51,7 +52,7 @@ export default function StepOne<T>({ props, setSharedState }: IStepProps<T>) {
             </p>
           </div>
 
-          <div className="h-[30rem] border-2 mt-5 border-dashed rounded-xl border-blue-600">
+          <div className="h-[30rem] border-2 mt-16 border-dashed rounded-xl border-blue-600">
             <div className="h-full w-full gap-3 flex justify-center flex-col items-center">
               <p className="font-medium text-gray-600 text-2xl">
                 Upload .xlsx, .xls, or csv file

@@ -19,15 +19,15 @@ export default function StepLayout<T>({
 }: ILayoutPropsExtend<T>) {
   return (
     <section className="bg-white w-full h-full">
-      <div className=" bg-slate-200 flex p-3">
+      <div className=" bg-slate-200 flex fixed top-0 z-20  w-full p-3">
         {data.map((item, idx) => (
           <div key={idx} className="flex gap-2 w-full items-center">
             <div
               className={` ${
                 props.stepsCompleted.includes(idx)
                   ? "bg-blue-600 border-white text-white"
-                  : "text-blue-600 "
-              } w-14 flex-shrink-0 flex-grow-0 border-blue-700 border-2 bg-white shadow h-14 rounded-full flex items-center  text-center justify-center`}
+                  : "text-blue-600 bg-white "
+              } w-14 flex-shrink-0 flex-grow-0 border-blue-700 border-2  shadow h-14 rounded-full flex items-center  text-center justify-center`}
             >
               {props.stepsCompleted.includes(idx) ? (
                 <svg
@@ -36,7 +36,7 @@ export default function StepLayout<T>({
                   viewBox="0 0 24 24"
                   strokeWidth={2}
                   stroke="currentColor"
-                  className="w-7 h-7"
+                  className="w-7 h-7 text-white"
                 >
                   <path
                     strokeLinecap="round"
@@ -54,8 +54,10 @@ export default function StepLayout<T>({
               </p>
               <div
                 className={`${
-                  props.stepsCompleted.includes(idx) ? "bg-blue-600" : ""
-                } h-[2px] w-full bg-white`}
+                  props.stepsCompleted.includes(idx)
+                    ? "bg-blue-600"
+                    : "bg-white"
+                } h-[2px] w-full `}
               ></div>
             </div>
           </div>

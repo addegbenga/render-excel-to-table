@@ -1,7 +1,7 @@
 import * as XLSX from "xlsx";
 import { MultipleSheetView } from "./MultipleSheet";
 
-import { IStepProps } from "./types";
+import { IStepProps, stepType } from "./types";
 
 export default function StepOne<T>({ props, setSharedState }: IStepProps<T>) {
   function handleExcelFileChange(event: any) {
@@ -33,7 +33,13 @@ export default function StepOne<T>({ props, setSharedState }: IStepProps<T>) {
       } else {
         const workSheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsa = XLSX.utils.sheet_to_json(workSheet);
-        setSharedState({ ...props, sheetData: jsa, filedata: file });
+        setSharedState({
+          ...props,
+          sheetData: jsa,
+          filedata: file,
+          step: stepType.stepTwo,
+          stepsCompleted: [...props.stepsCompleted, stepType.stepOne],
+        });
         // setSheetData(jsa);
         console.log(jsa);
       }

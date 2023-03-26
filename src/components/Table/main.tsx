@@ -90,7 +90,7 @@ export default function MyTable({
 
   return (
     <div className=" w-full  rounded-xl">
-      <table className=" w-full table-fixed  ">
+      <table className=" w-full  ">
         <thead className="sticky   self-start top-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr

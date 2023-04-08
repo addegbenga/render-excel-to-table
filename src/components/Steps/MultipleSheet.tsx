@@ -2,7 +2,10 @@ import { useState } from "react";
 import * as XLSX from "xlsx";
 import { IStepProps, stepType } from "./types";
 
-export function MultipleSheetView<T>({ props, setSharedState }: IStepProps<T>) {
+export function MultipleSheetView<T>({
+  props,
+  setSharedState,
+}: Omit<IStepProps<T>, "handleGetStateValues">) {
   const handleNext = () => {
     setSharedState({
       ...props,

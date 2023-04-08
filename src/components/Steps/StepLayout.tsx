@@ -6,17 +6,18 @@ interface IStepLayoutProps {
 
 type ILayoutPropsExtend<T> = IStepLayoutProps & IStepProps<T>;
 
-const data = [
-  "Upload File",
-  "Select Header Row",
-  "Column Matching",
-  "Validate data",
-];
+// const data = [
+//   "Upload File",
+//   "Select Header Row",
+//   "Column Matching",
+//   "Validate data",
+// ];
+const data = ["Upload File", "Validate Data", "Add Colums"];
 
 export default function StepLayout<T>({
   props,
   children,
-}: ILayoutPropsExtend<T>) {
+}: Omit<ILayoutPropsExtend<T>, "handleGetStateValues">) {
   return (
     <section className="bg-white w-full h-full">
       <div className=" bg-slate-200 flex fixed top-0 z-20  w-full p-3">

@@ -24,11 +24,9 @@ interface IhandleAddMoreColumnProps<T> {
   stateValue: string;
   columnName: string;
   tableData: T[];
-  stateSetter: React.Dispatch<React.SetStateAction<{}>>;
 }
 
 export function handleAddMoreColumns<T>({
-  stateSetter,
   stateValue,
   tableData,
   columnName,
@@ -41,5 +39,12 @@ export function handleAddMoreColumns<T>({
     dummy[idx] = { ...item, [columnName]: "" };
     return dummy;
   });
-  return stateSetter(dummy);
+
+  return dummy;
 }
+
+// const handleSelectColumn = (value: any) => {
+//   !selectedColumnLength
+//     ? setSelectedColumn(value?.id)
+//     : setSelectedColumn("");
+// };

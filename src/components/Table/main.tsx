@@ -6,6 +6,7 @@ import {
   flexRender,
   RowData,
 } from "@tanstack/react-table";
+import { IStateTypes, IStepProps } from "../Steps/types";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
@@ -29,11 +30,13 @@ function useSkipper() {
   return [shouldSkip, skip] as const;
 }
 
-interface ITableProps {
+export interface ITableProps {
   dynamicColumn: ({ data, editable }: any) => any;
+  expectedHeader?: Object;
   selectedColumn: string;
+  setStateValues: React.Dispatch<React.SetStateAction<IStateTypes>>;
   dataSelect: any;
-  StateData: any;
+  StateData: IStateTypes;
   handleSelectColumn: (value: any) => void;
   makeSelectedColumnCellsADropDown: {
     istrue: boolean;
@@ -48,19 +51,20 @@ export default function MyTable({
   dataSelect,
   selectedColumn,
   makeSelectedColumnCellsADropDown,
+  expectedHeader,
+  setStateValues,
 }: ITableProps) {
-  const [data, setData] = React.useState(() => StateData);
-
-  console.log(data, "ddd");
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
 
   const table = useReactTable({
-    data,
+    data: StateData.sheetData,
     columns: dynamicColumn({
-      data: StateData,
+      StateData: StateData,
       selectedColumn: selectedColumn,
       makeSelectedColumnCellsADropDown,
       dataSelect: dataSelect,
+      handleSelectColumn: handleSelectColumn,
+      expectedHeader: expectedHeader,
     }),
     getCoreRowModel: getCoreRowModel(),
     // getFilteredRowModel: getFilteredRowModel(),
@@ -71,18 +75,20 @@ export default function MyTable({
       updateData: (rowIndex, columnId, value) => {
         // Skip age index reset until after next rerender
         skipAutoResetPageIndex();
-        setData((old: any[]) =>
-          old.map((row: any, index: number) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex]!,
-                [columnId]: value,
-              };
-            }
-
-            return row;
-          })
-        );
+        setStateValues({
+          ...StateData,
+          sheetData: [
+            ...StateData.sheetData.map((row: any, index: any) => {
+              if (index === rowIndex) {
+                return {
+                  ...StateData.sheetData[rowIndex]!,
+                  [columnId]: value,
+                };
+              }
+              return row;
+            }),
+          ],
+        });
       },
     },
     debugTable: true,
@@ -90,7 +96,7 @@ export default function MyTable({
 
   return (
     <div className=" w-full  rounded-xl">
-      <table className=" w-full  ">
+      <table className=" w-full table-auto ">
         <thead className="sticky   self-start top-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr

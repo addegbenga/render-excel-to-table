@@ -4,7 +4,7 @@ import { dynamicColumn } from "../Table/TableColumn";
 import { allowedHeader } from "../..";
 import { handleAddMoreColumns } from "../../utils";
 
-export default function StepThree<T>({
+export default function StepFour<T>({
   props,
   setSharedState,
   headerValidation,
@@ -19,8 +19,8 @@ export default function StepThree<T>({
   const handleNext = () => {
     setSharedState({
       ...props,
-      step: stepType.stepFour,
-      stepsCompleted: [...props.stepsCompleted, stepType.stepThree],
+      //   step: stepType.stepThree,
+      //   stepsCompleted: [...props.stepsCompleted, stepType.stepTwo],
     });
     handleGetStateValues(props);
   };
@@ -30,7 +30,34 @@ export default function StepThree<T>({
       <div className="px-4 p-4 w-full">
         <div className="flex items-center mt-[6rem] mb-6 justify-between">
           <div>
-            <h1 className="text-3xl font-medium ">Validate Data</h1>
+            <h1 className="text-3xl font-medium ">Add Columns</h1>
+            <p className="text-sm text-gray-500">
+              The selected item will be used as a header for matching columns.
+            </p>
+          </div>
+          <div className="flex gap-1 ">
+            <input
+              onChange={(e) =>
+                setSharedState({ ...props, columnName: e.target.value })
+              }
+              type="text"
+              className="border p-2 w-[20rem]"
+              placeholder="Add column"
+            />
+            <button
+              onClick={(prop) => {
+                const result = handleAddMoreColumns({
+                  columnName: props.columnName,
+                  stateValue: props.columnName,
+                  tableData: props.sheetData,
+                });
+
+                setSharedState({ ...props, sheetData: result });
+              }}
+              className="bg-blue-500 text-white p-2 text-sm rounded"
+            >
+              Add Columns
+            </button>
           </div>
         </div>
 
@@ -62,7 +89,6 @@ export default function StepThree<T>({
               <MyTable
                 expectedHeader={allowedHeader}
                 dataSelect={dataSelect}
-                setStateValues={setSharedState}
                 selectedColumn={props.selectedColumn}
                 handleSelectColumn={(item) => {
                   [
@@ -72,6 +98,7 @@ export default function StepThree<T>({
                     }),
                   ];
                 }}
+                setStateValues={setSharedState}
                 makeSelectedColumnCellsADropDown={{ istrue: true, key: "" }}
                 StateData={props}
                 dynamicColumn={dynamicColumn}

@@ -1,30 +1,49 @@
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import React from "react";
+import { ITableProps } from "./main";
 import { Person } from "./types";
 
-interface IdynamicColumnProps {
-  data: any;
-  dataSelect: any;
-  selectedColumn: string;
-  makeSelectedColumnCellsADropDown: {
-    istrue: boolean;
-    key: string;
-  };
-}
+type IColumnExtendedTypes = Omit<ITableProps, "dynamicColumn">;
 
 export function dynamicColumn({
-  data,
+  StateData,
   selectedColumn,
   makeSelectedColumnCellsADropDown,
   dataSelect,
-}: IdynamicColumnProps) {
+  expectedHeader,
+  handleSelectColumn,
+}: IColumnExtendedTypes) {
   const columnHelper = createColumnHelper<Person>();
-  const column = Object.keys(data[0]).map((item, idx) => {
+  const column = Object.keys(StateData.sheetData[0]).map((item, idx) => {
     return columnHelper.accessor((row: any) => row[item], {
       id: item,
       header: () => (
-        <div className="font-medium min-w-[20rem]  bg-white z-20 p-4 sticky top-0 self-start  cursor-pointer flex justify-between  truncate    text-[#0A172A] text-opacity-40">
-          {item}
+        <div
+          onClick={() => handleSelectColumn(item)}
+          className="font-medium  min-w-[30rem]  bg-white  z-20 p-4 sticky top-0 self-start  cursor-pointer flex justify-between  truncate    text-[#0A172A] text-opacity-40"
+        >
+          {expectedHeader && Object.keys(expectedHeader)[idx] !== item ? (
+            <p className="grid">
+              {item}
+              {Object.keys(expectedHeader)[idx] ? (
+                <span className="text-red-500 tracking-wide  text-sm">
+                  Error: Header should be titled {}
+                  <span className="uppercase underline">
+                    {Object.keys(expectedHeader)[idx]}
+                  </span>
+                </span>
+              ) : (
+                <span className=" text-orange-400 tracking-wide  text-sm">
+                  Warning: This column is not specified {}
+                  <span className="uppercase underline">
+                    {Object.keys(expectedHeader)[idx]}
+                  </span>
+                </span>
+              )}
+            </p>
+          ) : (
+            <span>{item}</span>
+          )}
         </div>
       ),
       footer: (info) => info.column.id,
@@ -50,7 +69,10 @@ export function dynamicColumn({
                 <div>
                   <select
                     className="w-full"
-                    onChange={(e) => setValue(e.target.value)}
+                    onChange={(e) => [
+                      setValue(e.target.value),
+                      console.log(e.target.value),
+                    ]}
                     name="cars"
                     id="cars"
                     value={value as string}
@@ -58,8 +80,8 @@ export function dynamicColumn({
                   >
                     {dataSelect.map(
                       (item: any, idx: React.Key | null | undefined) => (
-                        <option value={item} key={idx}>
-                          {item}
+                        <option value={item.id} key={idx}>
+                          {item.name}
                         </option>
                       )
                     )}

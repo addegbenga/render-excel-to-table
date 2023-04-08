@@ -3,7 +3,10 @@ import { MultipleSheetView } from "./MultipleSheet";
 
 import { IStepProps, stepType } from "./types";
 
-export default function StepOne<T>({ props, setSharedState }: IStepProps<T>) {
+export default function StepOne<T>({
+  props,
+  setSharedState,
+}: Omit<IStepProps<T>, "handleGetStateValues">) {
   function handleExcelFileChange(event: any) {
     const file = event.target.files[0];
 
@@ -32,7 +35,10 @@ export default function StepOne<T>({ props, setSharedState }: IStepProps<T>) {
         ];
       } else {
         const workSheet = workbook.Sheets[workbook.SheetNames[0]];
+
+        console.log(workSheet, "lll");
         const jsa = XLSX.utils.sheet_to_json(workSheet);
+
         setSharedState({
           ...props,
           sheetData: jsa,
